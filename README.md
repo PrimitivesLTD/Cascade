@@ -8,7 +8,7 @@ Cascade is a robust and efficient image classification solution built on the Res
 > **Note:** Cascade offers an interface primarily in Russian to cater to our native users. However, all the inline code documentation is provided in English.
 
 <p align="center">
-  <img src="https://github.com/PrimitivesLTD/Screenshot.png" alt="Primitives logo">
+  <img src="https://github.com/PrimitivesLTD/Cascade/blob/main/Screenshot.png?raw=true" alt="Primitives logo">
 </p>
 
 ## Features
@@ -23,4 +23,4 @@ Cascade is a robust and efficient image classification solution built on the Res
 Clone this repository to your local machine using:
 `git clone https://github.com/PrimitivesLTD/Cascade.git`
 
-And just open the solution in Visual Studio 2022.
+And just open the solution in Visual Studio (tested in VS 2022)
