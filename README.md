@@ -23,4 +23,4 @@ Cascade is a robust and efficient image classification solution built on the Res
 Clone this repository to your local machine using:
 `git clone https://github.com/PrimitivesLTD/Cascade.git`
 
-And just open the solution in Visual Studio (tested in VS 2022)
+Then open the solution in Visual Studio and build x64 solution (tested in VS 2022)
