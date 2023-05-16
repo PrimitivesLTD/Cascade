@@ -8,7 +8,7 @@ Cascade is a robust and efficient image classification solution built on the Res
 > **Note:** Cascade offers an interface primarily in Russian to cater to our native users. However, all the inline code documentation is provided in English.
 
 <p align="center">
-  <img src="https://github.com/PrimitivesLTD/Cascade/blob/main/Screenshot.png?raw=true" alt="Primitives logo">
+  <img src="https://github.com/PrimitivesLTD/Cascade/blob/main/Screenshot.png?raw=true" alt="Cascade app screenshot">
 </p>
 
 ## Features
