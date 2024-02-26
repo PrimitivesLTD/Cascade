@@ -399,7 +399,7 @@ namespace PrimitivesCascade
             var conv1 = ConvLayer(input, numFilters, new int[] { 3, 3 }, device, stride);
 
             // Non-linearity
-            var relu1 = CNTKLib.ReLU(conv1);
+            var relu1 = CNTKLib.LeakyReLU(conv1, 0.2);
 
             // Second convolutional layer
             var conv2 = ConvLayer(relu1, numFilters, new int[] { 3, 3 }, device);
@@ -421,7 +421,7 @@ namespace PrimitivesCascade
             var add = CNTKLib.Plus(conv2, inputAdjusted);
 
             // Final non-linearity
-            var relu2 = CNTKLib.ReLU(add);
+            var relu2 = CNTKLib.LeakyReLU(add, 0.2);
 
             return relu2;
         }
@@ -505,23 +505,23 @@ namespace PrimitivesCascade
                         // Average pooling
                         var avgPool = CNTKLib.Pooling(block4, PoolingType.Average, block4.Output.Shape.Dimensions.Take(2).ToArray(), new int[] { 1, 1 });
 
+                        // Flatten the output from the average pooling layer
+                        var flatAvgPool = CNTKLib.Reshape(avgPool, new int[] { NDShape.InferredDimension });
+
                         // Fully connected layer
-                        var Wfc = new Parameter(new int[] { 1, 1, NDShape.InferredDimension, numOutputClasses }, DataType.Float, CNTKLib.GlorotUniformInitializer(), device);
+                        var Wfc = new Parameter(new int[] { numOutputClasses, NDShape.InferredDimension }, DataType.Float, CNTKLib.GlorotUniformInitializer(), device);
                         var Bfc = new Parameter(new int[] { numOutputClasses }, DataType.Float, 0, device);
-                        var model = CNTKLib.Sigmoid(CNTKLib.Plus(Bfc, CNTKLib.Convolution(Wfc, avgPool)));
+                        var dense = CNTKLib.Times(Wfc, flatAvgPool);
+                        var model = CNTKLib.Sigmoid(CNTKLib.Plus(Bfc, dense));
 
                         var labelInput = Variable.InputVariable(new int[] { numOutputClasses }, DataType.Float);
                         var loss = CNTKLib.BinaryCrossEntropy(model, labelInput);
                         var classificationError = CNTKLib.ClassificationError(new Variable(model), labelInput);
 
                         // Configure training
-                        var learningRatePerSample = new TrainingParameterScheduleDouble(0.001, BatchSize);
+                        var parameterLearners = new List<Learner>() { CNTKLib.AdamLearner(new ParameterVector((System.Collections.ICollection)model.Parameters()), new TrainingParameterScheduleDouble(0.001, BatchSize), new TrainingParameterScheduleDouble(0.971), true) };
 
-                        var vp = new ParameterVector();
-                        foreach (Parameter p in model.Parameters()) vp.Add(p);
-                        var parameterLearners = new List<Learner>() { CNTKLib.AdaDeltaLearner(vp, learningRatePerSample, 0.95, 1e-07) };
-
-                        var trainer = Trainer.CreateTrainer(model, loss, classificationError, parameterLearners);
+                        var trainer = Trainer.CreateTrainer(model, loss, loss, parameterLearners);
                         var evaluator = CNTKLib.CreateEvaluator(loss);
 
                         // Training loop
