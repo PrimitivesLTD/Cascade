@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://primitives.ru/logo.png" alt="Primitives logo">
+  <img src="https://github.com/PrimitivesLTD/DogeAI-Demo/blob/main/logo.png" alt="Primitives logo">
 </p>
 
 ## Cascade: Image Preprocessing and Visual Neural Model Training GUI Toolkit (experimental)
